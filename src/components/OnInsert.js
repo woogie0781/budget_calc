@@ -1,14 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { MdAdd } from 'react-icons/md';
 
-const OnInsert = ({ onfoodInsert, onhomeInsert }) => {
+const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
 
     const [ value ,setValue ] = useState('');
     const [ initialValue, setinitValue ] = useState('food');
     const [ price, setPrice ] = useState('');
+    const [ budget, setBudget ] = useState(0);
     //const input = useRef(null);
 
     const onSubmit = useCallback(e => { // 버튼클릭시 동작
+        getValFromInitial(budget);     
         
         if  (value === '' || price === '') {
             alert('내역과 금액을 기입해주세요.')
@@ -21,10 +23,11 @@ const OnInsert = ({ onfoodInsert, onhomeInsert }) => {
             }
             setValue('');
             setPrice('');
+            
         }
         e.preventDefault();
 
-    }, [onfoodInsert, onhomeInsert, initialValue, value, price]);
+    }, [getValFromInitial, onfoodInsert, onhomeInsert, budget, initialValue, value, price]);
 
     const handleChange = useCallback(e => { // checkbox 값 변경시 적용
         setinitValue(e.target.value)
@@ -39,9 +42,16 @@ const OnInsert = ({ onfoodInsert, onhomeInsert }) => {
         setPrice(e.target.value)
     }, []);
 
+    const budgetChange = useCallback(e => {
+        setBudget(e.target.value)
+    }, []);
+
     return (
         <div>
             <form className='insert' onSubmit={onSubmit} >
+                <div className='aim-budget'>목표예산 : 
+                <input type='number' value={budget} onChange={budgetChange}/>  
+                </div>  
                 <div>소비분류  : 
                 <select value={initialValue} onChange={handleChange}>
                     <option value='food'>식비</option>

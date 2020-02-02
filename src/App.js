@@ -3,12 +3,14 @@ import Initial from './components/Initial';
 import Foodlist from './components/Foodlist';
 import Homelist from './components/Homelist';
 import OnInsert from './components/OnInsert';
-
+import Avgshow from './components/Avgshow';
+const math = require('mathjs');
 
 const App = () => {
   
   const [ foodlist, setfoodList ] = useState([]); 
   const [ homelist, sethomeList ] = useState([]);
+  const [ initBudget, setinitBudget ] = useState(0);
   
   const foodId = useRef(1);
   const homeId = useRef(1);
@@ -58,12 +60,40 @@ const App = () => {
     sethomeList(homelist.filter(home => home.id !== id))
   }, [homelist]);
 
+  const getValFromInitial = useCallback(val => {
+    setinitBudget(val);
+    //console.log("초기값 : ", initBudget)
+  }, []);
+
+  const avg = useCallback(() => {
+    let food_sum = 0;
+    let home_sum = 0;
+
+    foodlist.map(food  => (
+      food_sum += food.price
+    ));
+
+    homelist.map(home => (
+      home_sum += home.price
+    ));
+
+    
+    const res = math.subtract(initBudget, math.add(food_sum, home_sum))
+  
+    return res;
+  
+  }, [foodlist, homelist, initBudget]);
+
+  // const average = useCallback(() => avg(), []);
+
+
   return (
     <>
       <Initial>
-        <OnInsert onfoodInsert={onfoodInsert} onhomeInsert={onhomeInsert} />
+        <OnInsert onfoodInsert={onfoodInsert} onhomeInsert={onhomeInsert} getValFromInitial={getValFromInitial}/>
         <Foodlist foodlist={foodlist} onToggle={onfoodToggle} onRemove={onfoodRemove}/>
         <Homelist homelist={homelist} onToggle={onhomeToggle} onRemove={onhomeRemove}/>
+        <Avgshow avg={avg} />
       </Initial>
     </>
   )
