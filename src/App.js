@@ -70,16 +70,18 @@ const App = () => {
     let home_sum = 0;
 
     foodlist.map(food  => (
-      food_sum += food.price
+      food_sum += parseInt(food.price)
     ));
+    
 
     homelist.map(home => (
-      home_sum += home.price
+      home_sum += parseInt(home.price)
     ));
 
-    
+    // console.log(food_sum, home_sum, foodlist)
     const res = math.subtract(initBudget, math.add(food_sum, home_sum))
   
+
     return res;
   
   }, [foodlist, homelist, initBudget]);

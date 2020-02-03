@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { MdAdd } from 'react-icons/md';
 
 const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
@@ -7,7 +7,7 @@ const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
     const [ initialValue, setinitValue ] = useState('food');
     const [ price, setPrice ] = useState('');
     const [ budget, setBudget ] = useState(0);
-    //const input = useRef(null);
+    const input = useRef(null);
 
     const onSubmit = useCallback(e => { // 버튼클릭시 동작
         getValFromInitial(budget);     
@@ -26,6 +26,7 @@ const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
             
         }
         e.preventDefault();
+        input.current.focus();
 
     }, [getValFromInitial, onfoodInsert, onhomeInsert, budget, initialValue, value, price]);
 
@@ -35,7 +36,7 @@ const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
 
     const onChangeValue = useCallback(e => { // 소비내역 input의 값이 변할 때 적용
         setValue(e.target.value)
-        
+        input.current.focus();
     }, []);
 
     const priceChange = useCallback(e => { // 금액 input의 값이 변할 때 적용
@@ -59,7 +60,7 @@ const OnInsert = ({ onfoodInsert, onhomeInsert, getValFromInitial }) => {
                 </select>
                 </div>
                 <div>소비내역  :  
-                <input value={value} onChange={onChangeValue}  />
+                <input value={value} onChange={onChangeValue} ref={input} />
                 </div>
                 <div>금액  :
                 <input type='number' value={price} onChange={priceChange}/> 
